@@ -21,7 +21,13 @@ module FollowerMaze
     end
 
     def readline
-      @client.gets("\n")
+      begin
+        Timeout.timeout(DEFAULT_TIMEOUT) do
+          @client.gets("\n")
+        end
+      rescue Timeout::Error
+        Logger.error "A timeout occured when reading some input. Connection: #{self.inspect}"
+      end
     end
 
     def respond(message)

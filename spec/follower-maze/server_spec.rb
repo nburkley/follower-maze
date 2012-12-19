@@ -27,13 +27,9 @@ module FollowerMaze
 
       context "with client and event sockets set up" do
         before do
-          begin
-            @event_client = create_client(EVENTS_PORT)
-            @user_clients = create_client_collection
-            wait
-          rescue
-            retry
-          end
+          @event_client = create_client(EVENTS_PORT)
+          @user_clients = create_client_collection
+          wait
         end
 
         it "forwards a follow notification to a user" do

@@ -1,6 +1,7 @@
 require 'pry'
 require 'socket'
 require 'logger'
+require 'timeout'
 
 require_relative 'follower-maze/connection'
 require_relative 'follower-maze/user'
@@ -22,6 +23,7 @@ module FollowerMaze
   EVENT_TYPE = 1
   FROM_USER_ID = 2
   TO_USER_ID = 3
+  DEFAULT_TIMEOUT = 5
 end
 
 module FollowerMaze

@@ -15,12 +15,26 @@ EVENT_TYPE = 1
 FROM_USER_ID = 2
 TO_USER_ID = 3
 
+
+DEFAULT_WAIT_TIME = 1
+DEFAULT_TIMEOUT = 5
+
 def create_client(port=CLIENTS_PORT)
-  TCPSocket.new('localhost', port)
+  begin
+    TCPSocket.new('localhost', port)
+  rescue
+    retry
+  end
 end
 
 def read_response(user_client)
-  user_client.readpartial(CHUNK_SIZE)
+  begin
+    Timeout.timeout(DEFAULT_TIMEOUT) do
+      user_client.readpartial(CHUNK_SIZE)
+    end
+  rescue Timeout::Error
+    puts "TIMEOUT ERROR - you may want to increase the 'DEFAULT_WAIT_TIME' in #{__FILE__}"
+  end
 end
 
 def create_client_collection(count=5)
@@ -44,7 +58,7 @@ def read_nonblocking_response(user_client)
   end
 end
 
-def wait(seconds = 1)
+def wait(seconds = DEFAULT_WAIT_TIME)
   sleep(seconds)
 end
 
